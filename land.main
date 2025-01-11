@@ -1,0 +1,427 @@
+// Main entry point for the Flutter application
+import 'package:flutter/material.dart';
+import 'weather_service.dart';
+import 'package:video_player/video_player.dart';
+void main() {
+  runApp(LandslideApp());
+  Container(
+  color: Colors.cyan, // Sets the background color
+  padding: const EdgeInsets.all(16.0), // Adds padding inside the container
+);
+
+}
+
+class LandslideApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Landslide Prediction App',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
+      home: HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the video controller with the asset video
+    _controller = VideoPlayerController.asset('assets/0_Earth_Planet_3840x2160.mp4')
+      ..initialize().then((_) {
+        setState(() {
+          _controller.play();
+          _controller.setLooping(true); // Loop the video
+          _controller.setVolume(0.0); // Mute the video if needed
+        });
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose(); // Dispose the controller to free resources
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var padding = Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: 60),
+                Center(
+                  child: Text(
+                    'Welcome to the Landslide Prediction App',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: const Color.fromARGB(255, 73, 69, 69), // Text color for visibility
+                    ),
+                  ),
+                ),
+                SizedBox(height: 40),
+                _buildButton(
+                  context,
+                  'Landslide Prediction',
+                  Icons.warning,
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PredictionPage()),
+                  ),
+                ),
+                _buildButton(
+                  context,
+                  'Guidance',
+                  Icons.help,
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GuidancePage()),
+                  ),
+                ),
+                _buildButton(
+                  context,
+                  'Weather Forecasting',
+                  Icons.cloud,
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => WeatherForecastingPage()),
+                  ),
+                ),
+                _buildButton(
+                  context,
+                  'Emergency Alerts',
+                  Icons.notifications,
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EmergencyAlertsPage()),
+                  ),
+                ),
+                _buildButton(
+                  context,
+                  'Resource Requests',
+                  Icons.support,
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ResourceRequestsPage()),
+                  ),
+                ),
+              ],
+            ),
+          );
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Video background
+          if (_controller.value.isInitialized)
+            SizedBox.expand(
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: SizedBox(
+                  width: _controller.value.size.width,
+                  height: _controller.value.size.height,
+                  child: VideoPlayer(_controller),
+                ),
+              ),
+            ),
+          // Overlay content
+          padding,
+        ],
+      ),
+    );
+  }
+
+  // Helper function to create buttons
+  Widget _buildButton(
+    BuildContext context,
+    String label,
+    IconData icon,
+    VoidCallback onPressed,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: ElevatedButton.icon(
+        onPressed: onPressed,
+        icon: Icon(icon),
+        label: Text(label),
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.all(16),
+          textStyle: TextStyle(fontSize: 18),
+        ),
+      ),
+    );
+  }
+}
+
+class PredictionPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Landslide Prediction'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Enter Details for Prediction',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Location',
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Handle prediction logic
+              },
+              child: Text('Predict'),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.all(16),
+                textStyle: TextStyle(fontSize: 18),
+              ),
+            ),
+            SizedBox(height: 20),
+            Center(
+              child: Text(
+                'Prediction Results will appear here.',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class GuidancePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Guidance'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          children: [
+            ExpansionTile(
+              title: Text('Step 1: Stay Informed'),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Monitor weather reports and warnings from authorities.',
+                  ),
+                ),
+              ],
+            ),
+            ExpansionTile(
+              title: Text('Step 2: Prepare Emergency Kit'),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Include essentials such as water, food, flashlight, and medicines.',
+                  ),
+                ),
+              ],
+            ),
+            ExpansionTile(
+              title: Text('Step 3: Plan Evacuation'),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Identify safe areas and routes in advance.',
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class WeatherForecastingPage extends StatefulWidget {
+  @override
+  _WeatherForecastingPageState createState() => _WeatherForecastingPageState();
+}
+
+class _WeatherForecastingPageState extends State<WeatherForecastingPage> {
+  final WeatherService weatherService = WeatherService();
+  String city = 'London';
+  Map<String, dynamic>? weatherData;
+  bool isLoading = false;
+
+  void fetchWeather() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final data = await weatherService.fetchWeather(city);
+      setState(() {
+        weatherData = data;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Weather Forecasting'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Enter City',
+              ),
+              onChanged: (value) {
+                city = value;
+              },
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: fetchWeather,
+              child: Text('Get Weather'),
+            ),
+            SizedBox(height: 20),
+            if (isLoading) CircularProgressIndicator(),
+            if (weatherData != null) ...[
+              Text(
+                'Temperature: ${weatherData!['main']['temp']}°C',
+                style: TextStyle(fontSize: 18),
+              ),
+              Text(
+                'Condition: ${weatherData!['weather'][0]['description']}',
+                style: TextStyle(fontSize: 18),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+class EmergencyAlertsPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Emergency Alerts'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Emergency Alerts',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 3,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: Icon(Icons.warning, color: Colors.red),
+                    title: Text('Alert ${index + 1}: Landslide Risk in Area'),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Handle push notification settings
+              },
+              child: Text('Manage Notifications'),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.all(16),
+                textStyle: TextStyle(fontSize: 18),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ResourceRequestsPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Resource Requests'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Request Resources',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Your Need',
+              ),
+              maxLines: 3,
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Handle resource request submission
+              },
+              child: Text('Submit Request'),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.all(16),
+                textStyle: TextStyle(fontSize: 18),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
